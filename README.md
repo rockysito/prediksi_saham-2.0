@@ -1,12 +1,4 @@
-﻿---
-title: Prediksi Saham Pro
-emoji: 📈
-colorFrom: blue
-colorTo: green
-sdk: docker
-app_port: 7860
----
-# ðŸ“ˆ AI Trade Pro: Algorithmic Stock Prediction System
+# 📈 AI Trade Pro: Algorithmic Stock Prediction System
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-Hugging_Face-blue?style=for-the-badge&logo=huggingface)](https://huggingface.co/spaces/godless1405/prediksi-saham-pro)
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue?style=flat-square)
@@ -16,11 +8,11 @@ app_port: 7860
 
 AI Trade Pro is an advanced, production-ready algorithmic trading analysis platform. It combines **Deep Learning (LSTM)**, **Statistical Forecasting (ARIMA)**, and **Natural Language Processing (VADER Sentiment Analysis)** to predict the short-term trajectory of major global stocks.
 
-ðŸ‘‰ **[TRY THE LIVE WEB APPLICATION HERE!](https://huggingface.co/spaces/godless1405/prediksi-saham-pro)**
+👉 **[TRY THE LIVE WEB APPLICATION HERE!](https://huggingface.co/spaces/godless1405/prediksi-saham-pro)**
 
 ---
 
-## ðŸŒŸ Key Features
+## 🌟 Key Features
 
 1. **AI Confluence Signal Generation**
    The system doesn't just output raw numbers; it produces an automated Trading Recommendation (`STRONG BUY`, `HOLD`, `STRONG SELL`). It calculates this by cross-referencing the quantitative price prediction from the AI models against the qualitative global market sentiment.
@@ -35,25 +27,25 @@ AI Trade Pro is an advanced, production-ready algorithmic trading analysis platf
 4. **Dynamic Watchlist Methodology**
    To prevent server timeouts and simulate institutional trading environments, the system focuses on a curated "Watchlist" of major tech stocks (`AAPL`, `TSLA`, `MSFT`, `NVDA`, `GOOGL`, `BBCA.JK`). 
 
-## ðŸ—ï¸ System Architecture
+## 🏗️ System Architecture
 
 This project was built from scratch utilizing a modern Microservices architecture, allowing the frontend and backend to scale independently.
 
 ```text
 prediksi_saham_2.0/
-â”œâ”€â”€ api/
-â”‚   â””â”€â”€ main.py              # FastAPI Backend (REST endpoints for prediction & sentiment)
-â”œâ”€â”€ frontend/
-â”‚   â””â”€â”€ app.py               # Streamlit Premium Dashboard (User Interface)
-â”œâ”€â”€ src/
-â”‚   â”œâ”€â”€ models/              # Object-Oriented LSTM & ARIMA model wrappers
-â”‚   â””â”€â”€ pipelines/           
-â”‚       â””â”€â”€ scheduler.py     # Background worker for nightly model retraining
-â”œâ”€â”€ Dockerfile               # Configuration for Hugging Face Spaces deployment
-â””â”€â”€ start.py                 # Unified entrypoint to run API & UI concurrently
+├── api/
+│   └── main.py              # FastAPI Backend (REST endpoints for prediction & sentiment)
+├── frontend/
+│   └── app.py               # Streamlit Premium Dashboard (User Interface)
+├── src/
+│   ├── models/              # Object-Oriented LSTM & ARIMA model wrappers
+│   └── pipelines/           
+│       └── scheduler.py     # Background worker for nightly model retraining
+├── Dockerfile               # Configuration for Hugging Face Spaces deployment
+└── start.py                 # Unified entrypoint to run API & UI concurrently
 ```
 
-## ðŸš€ How to Run Locally
+## 🚀 How to Run Locally
 
 If you wish to run this system on your local machine for further development:
 
@@ -86,9 +78,8 @@ If you wish to run this system on your local machine for further development:
    ```
    *The Streamlit UI will be available at `http://localhost:7860` and the FastAPI docs at `http://localhost:8000/docs`.*
 
-## ðŸ§  The Journey: From Notebook to Production
+## 🧠 The Journey: From Notebook to Production
 This version (2.0) is a massive refactor of personal Jupyter Notebook research files. The original unstructured scripts were decomposed into modular Python Classes (`StockARIMAModel`, `StockLSTMModel`), encapsulated in RESTful APIs, and deployed via Docker to the cloud, proving the transition from *Data Science Experimentation* to *Software Engineering Deployment*.
 
 ---
 *Disclaimer: This software is for educational, portfolio, and research purposes only. Do not use algorithmic predictions as your sole financial or investment advice.*
-

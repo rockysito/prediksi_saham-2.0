@@ -16,13 +16,35 @@ def run_scraping_job():
     print(f"Scraped and Analyzed {len(analyzed)} rows. Saved to DB.")
 
 def run_ml_job():
+    import yfinance as yf
+    import pandas as pd
+    from src.models.lstm_model import StockLSTMModel
+    
     print("Running Daily Model Retraining for Watchlist...")
     for ticker in WATCHLIST:
-        print(f"Training 100 Epochs LSTM & ARIMA for {ticker}...")
-        print(f"Saving models to saved_models/{ticker}_lstm.h5 ...")
-    # Fetch latest data from yfinance and retrain ARIMA/LSTM
-    # Update saved models
-    print("Models retrained and updated.")
+        print(f"\n--- Training 50 Epochs LSTM for {ticker} ---")
+        try:
+            df = yf.download(ticker, period="2y", interval="1d", progress=False)
+            if df.empty: continue
+            
+            if isinstance(df.columns, pd.MultiIndex): 
+                if ticker in df['Close']: close_prices = df['Close'][ticker].dropna()
+                else: close_prices = df['Close'].dropna().iloc[:, 0]
+            else: 
+                close_prices = df['Close'].dropna()
+                
+            model = StockLSTMModel(look_back=60)
+            # Train 50 epochs for high accuracy nightly
+            model.train(close_prices, epochs=50, batch_size=32)
+            
+            model_path = f"saved_models_lstm/{ticker}_lstm.h5"
+            scaler_path = f"saved_models_lstm/{ticker}_scaler.pkl"
+            model.save(model_path, scaler_path)
+            print(f"Successfully saved {ticker} model to {model_path}")
+        except Exception as e:
+            print(f"Failed to train/save {ticker}: {e}")
+            
+    print("All Models retrained and updated.")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

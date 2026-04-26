@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 import tensorflow as tf
+import joblib
+import os
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Dropout
 from sklearn.preprocessing import MinMaxScaler
@@ -50,3 +52,14 @@ class StockLSTMModel:
         pred_scaled = self.model.predict(X)
         pred = self.scaler.inverse_transform(pred_scaled)
         return pred[0][0]
+
+    def save(self, model_path, scaler_path):
+        os.makedirs(os.path.dirname(model_path), exist_ok=True)
+        os.makedirs(os.path.dirname(scaler_path), exist_ok=True)
+        if self.model:
+            self.model.save(model_path)
+        joblib.dump(self.scaler, scaler_path)
+
+    def load(self, model_path, scaler_path):
+        self.model = tf.keras.models.load_model(model_path)
+        self.scaler = joblib.load(scaler_path)

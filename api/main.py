@@ -52,7 +52,19 @@ def get_prediction(ticker: str, model_type: str = "arima"):
             pred = model.predict(steps=1)[0]
         elif model_type.lower() == "lstm":
             model = StockLSTMModel(look_back=60)
-            model.train(close_prices, epochs=1, batch_size=32)
+            import os
+            model_path = f"saved_models_lstm/{ticker}_lstm.h5"
+            scaler_path = f"saved_models_lstm/{ticker}_scaler.pkl"
+            try:
+                # Coba load model pre-trained (0 detik)
+                if os.path.exists(model_path) and os.path.exists(scaler_path):
+                    model.load(model_path, scaler_path)
+                else:
+                    # Fallback ke fast-training jika file belum ada
+                    model.train(close_prices, epochs=1, batch_size=32)
+            except Exception as e:
+                model.train(close_prices, epochs=1, batch_size=32)
+                
             recent_data = close_prices.values[-60:]
             pred = model.predict(recent_data)
         else:

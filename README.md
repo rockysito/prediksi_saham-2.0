@@ -1,3 +1,12 @@
+---
+title: Prediksi Saham Pro
+emoji: 📈
+colorFrom: blue
+colorTo: green
+sdk: docker
+app_port: 7860
+---
+
 # 📈 AI Trade Pro: Algorithmic Stock Prediction System
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-Hugging_Face-blue?style=for-the-badge&logo=huggingface)](https://huggingface.co/spaces/godless1405/prediksi-saham-pro)
@@ -68,7 +77,7 @@ If you wish to run this system on your local machine for further development:
    ```bash
    pip install -r requirements_ml.txt
    pip install -r requirements_scraper.txt
-   pip install plotly vaderSentiment
+   pip install plotly vaderSentiment joblib
    ```
 
 4. **Start the Application:**

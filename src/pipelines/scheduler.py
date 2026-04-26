@@ -55,7 +55,7 @@ if __name__ == "__main__":
         schedule.every().day.at("18:00").do(run_scraping_job)
         
     if args.task in ["ml", "both"]:
-        schedule.every().day.at("02:00").do(run_ml_job)
+        schedule.every().day.at("22:00").do(run_ml_job)
 
     print(f"Scheduler started for task: {args.task}. Waiting for scheduled times...")
     

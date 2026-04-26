@@ -1,0 +1,2 @@
+Seed value: 42
+PYTHONHASHSEED: 42

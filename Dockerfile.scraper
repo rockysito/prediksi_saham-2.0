@@ -1,0 +1,12 @@
+FROM python:3.12.4-slim
+
+WORKDIR /app
+
+# Install dependencies for scraping
+COPY requirements_scraper.txt .
+RUN pip install --no-cache-dir -r requirements_scraper.txt
+
+COPY . .
+
+# Default command can be overridden by docker-compose
+CMD ["python", "src/scraper/scraper.py"]

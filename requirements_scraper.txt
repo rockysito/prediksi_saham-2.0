@@ -1,0 +1,9 @@
+pandas
+numpy
+snscrape
+beautifulsoup4
+selenium
+vaderSentiment
+requests
+curl_cffi
+schedule

@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  database:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: adminpassword
+      POSTGRES_DB: stock_predictions
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  scraper:
+    build: 
+      context: .
+      dockerfile: Dockerfile.scraper
+    depends_on:
+      - database
+    # Will run the scheduler to scrape daily
+    command: ["python", "src/pipelines/scheduler.py", "--task", "scraper"]
+
+  ml_api:
+    build:
+      context: .
+      dockerfile: Dockerfile.ml
+    ports:
+      - "8000:8000"
+    depends_on:
+      - database
+    command: ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.ml # Frontend runs on python 3.10 as well
+    ports:
+      - "8501:8501"
+    depends_on:
+      - ml_api
+    command: ["streamlit", "run", "frontend/app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+
+volumes:
+  db_data:

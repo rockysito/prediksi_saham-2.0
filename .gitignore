@@ -1,0 +1,8 @@
+venv/
+venv310/
+venv_baru/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env

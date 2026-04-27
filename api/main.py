@@ -60,10 +60,11 @@ def get_prediction(ticker: str, model_type: str = "arima"):
                 if os.path.exists(model_path) and os.path.exists(scaler_path):
                     model.load(model_path, scaler_path)
                 else:
-                    # Fallback ke fast-training jika file belum ada
-                    model.train(close_prices, epochs=1, batch_size=32)
+                    # Fallback: Train secara full (50 epochs) agar hasil selalu konsisten dan bagus
+                    model.train(close_prices, epochs=50, batch_size=16)
+                    model.save(model_path, scaler_path) # Simpan agar next time instan
             except Exception as e:
-                model.train(close_prices, epochs=1, batch_size=32)
+                model.train(close_prices, epochs=50, batch_size=16)
                 
             recent_data = close_prices.values[-60:]
             pred = model.predict(recent_data)
@@ -92,15 +93,39 @@ def get_sentiment(ticker: str):
         news = stock.news 
         
         if not news: return {"average_score": 0, "label": "Neutral", "headlines": []}
+        
+        positive_keywords = ["invest", "dividend", "earnings", "bullish", "growth", "upgrade", "target price", "innovation", "profit", "services"]
+        negative_keywords = ["bearish", "downgrade", "loss", "drop", "decline", "risk", "recession", "crash", "inflation", "warning", "cut"]
+        base_neutral = ["stock", "share", "price", "market", "valuation", "financial", "results", "shareholder", "outlook", "guidance", "revenue", "ceo", "analyst", "rating"]
+        
+        ticker_keywords = {
+            "AAPL": ["aapl", "apple", "iphone", "mac", "ipad", "watch", "ecosystem", "tim cook"],
+            "TSLA": ["tsla", "tesla", "ev", "electric", "elon musk", "model 3", "model y", "cybertruck", "fsd"],
+            "MSFT": ["msft", "microsoft", "windows", "azure", "office", "ai", "satya nadella", "xbox", "copilot"],
+            "NVDA": ["nvda", "nvidia", "gpu", "chip", "ai", "rtx", "cuda", "jensen huang", "datacenter"],
+            "GOOGL": ["googl", "google", "alphabet", "search", "youtube", "android", "cloud", "sundar pichai", "gemini"],
+            "BBCA.JK": ["bbca", "bca", "bank central asia", "bank", "kredit", "bunga", "dividen", "jahja setiaatmadja", "rupiah"]
+        }
+        
+        all_keywords = positive_keywords + negative_keywords + base_neutral + ticker_keywords.get(ticker, [ticker.lower()])
             
         total_score = 0
         analyzed_news = []
         
-        for item in news[:5]:
-            title = item.get('title', '')
-            score = analyzer.polarity_scores(title)['compound']
-            total_score += score
-            analyzed_news.append({"title": title, "score": round(score, 2), "link": item.get('link', '')})
+        for item in news:
+            title = item.get('title', '').lower()
+            
+            # Keyword Filtering
+            count = sum(1 for kw in all_keywords if kw in title)
+            raw_score = analyzer.polarity_scores(title)['compound']
+            
+            # Hanya ambil berita jika mengandung keyword yang relevan atau memiliki sentimen yang kuat
+            if count >= 1 or abs(raw_score) > 0.1:
+                total_score += raw_score
+                analyzed_news.append({"title": item.get('title', ''), "score": round(raw_score, 2), "link": item.get('link', '')})
+            
+            if len(analyzed_news) >= 5: # Ambil top 5 saja
+                break
             
         avg_score = total_score / len(analyzed_news) if analyzed_news else 0
         
